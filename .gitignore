@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.kivy/
+bin/
+.buildozer/
+.temp/
+*.db
+*.sqlite
+*.sqlite3
+data/cookies.txt
+downloads/
+*.apk
+*.aab
