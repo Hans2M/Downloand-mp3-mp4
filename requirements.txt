@@ -1,11 +1,7 @@
-# Dependencias principales para Media Downloader Android APK (KivyMD + Python)
-kivy==2.3.0
-kivymd==1.2.0
+# Dependencias para ejecutar la aplicación web local y desplegarla en Render.
+Flask>=3.0.0
+gunicorn>=22.0.0
 yt-dlp>=2024.10.0
-ffmpeg-python>=0.2.0
-pyjnius>=1.6.1
 requests>=2.31.0
 urllib3>=2.0.0
-pillow>=10.2.0
 certifi>=2024.2.2
-Flask>=3.0.0

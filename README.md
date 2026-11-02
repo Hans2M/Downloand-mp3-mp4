@@ -185,6 +185,16 @@ desplegar el backend completo en Render. Render instala FFmpeg y ejecuta Flask
 con Gunicorn. En el panel de Render selecciona **New > Blueprint** y conecta
 este repositorio.
 
+Si creas el servicio manualmente, usa exactamente:
+
+```text
+Build Command: pip install -r requirements.txt
+Start Command: gunicorn --workers 1 --threads 4 --timeout 900 web_app:app
+```
+
+Las dependencias Kivy/Android están separadas en
+`requirements-android.txt`; no deben instalarse en Render.
+
 ### Vercel
 
 Vercel no debe ejecutar el motor de descargas: sus funciones son temporales y
