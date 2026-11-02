@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Downloader</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">MEDIA DOWNLOADER</p>
+        <h1>Descarga tus medios</h1>
+        <p class="muted">MP3 y MP4 con calidad seleccionable, directamente en tu equipo.</p>
+      </div>
+      <span class="status-dot">LOCAL</span>
+    </header>
+
+    <section class="card">
+      <form id="analyze-form">
+        <label for="url">URL del contenido</label>
+        <div class="url-row">
+          <input id="url" type="url" placeholder="https://..." required>
+          <button class="primary" type="submit">Analizar</button>
+        </div>
+      </form>
+      <p id="message" class="message" role="status"></p>
+    </section>
+
+    <section id="media-panel" class="card hidden">
+      <div class="media-heading">
+        <img id="thumbnail" alt="" class="thumbnail hidden">
+        <div>
+          <h2 id="title"></h2>
+          <p id="metadata" class="muted"></p>
+        </div>
+      </div>
+      <div class="format-switch" role="group" aria-label="Formato">
+        <button class="format-button active" data-format="mp4">VIDEO MP4</button>
+        <button class="format-button" data-format="mp3">AUDIO MP3</button>
+      </div>
+      <label for="quality">Calidad</label>
+      <select id="quality"></select>
+      <button id="download-button" class="primary wide" type="button">Descargar</button>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Descargas</h2>
+        <button id="refresh-button" class="small-button" type="button">Actualizar</button>
+      </div>
+      <div id="tasks" class="empty">No hay descargas activas.</div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Biblioteca</h2>
+        <button id="history-button" class="small-button" type="button">Actualizar</button>
+      </div>
+      <div id="history" class="empty">Todavía no hay archivos completados.</div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

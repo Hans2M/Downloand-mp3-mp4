@@ -88,10 +88,13 @@ No necesitas instalar Linux, el SDK de Android ni el NDK en tu ordenador persona
 # Sube tus archivos python_app/ al entorno de Colab
 %cd /content/python_app
 
-# 4. Compilar APK en modo debug
+# 4. Limpiar artefactos de intentos anteriores
+!rm -rf .buildozer bin
+
+# 5. Compilar APK en modo debug
 !buildozer -v android debug
 
-# 5. Descargar el APK generado
+# 6. Descargar el APK generado
 from google.colab import files
 import glob
 apk_files = glob.glob("bin/*.apk")
@@ -129,8 +132,14 @@ pip3 install --user --upgrade buildozer Cython==0.29.36
 
 # 3. Compilar el APK
 cd python_app
+rm -rf .buildozer bin
 buildozer -v android debug
 ```
+
+> **Nota sobre Python:** `buildozer.spec` fija `python3==3.13.5` porque
+> Kivy 2.3.0 no compila con los headers de Python 3.14. Si se reutiliza un
+> directorio `.buildozer` de otro intento, es obligatorio borrarlo para que
+> python-for-android descargue la versión fijada.
 
 ---
 
@@ -149,6 +158,39 @@ Para verificar el funcionamiento de los extractores, SQLite y validaciones en tu
 ```bash
 python3 tests/test_download.py
 ```
+
+## 🌐 Aplicación web local
+
+La misma lógica también está disponible como aplicación web. Esta opción no
+elimina la versión Kivy: reutiliza el extractor, el motor de descargas, SQLite
+y FFmpeg existentes.
+
+```bash
+pip install -r requirements.txt
+python web_app.py
+```
+
+Abre `http://127.0.0.1:5000` en el navegador. Desde allí puedes analizar una
+URL, seleccionar MP3/MP4 y su calidad, iniciar o cancelar descargas, ver el
+progreso y guardar los archivos terminados desde la biblioteca.
+
+La web ejecuta las descargas en el equipo donde corre Flask; para usarla desde
+otro dispositivo de la misma red, inicia con `MEDIA_DOWNLOADER_HOST=0.0.0.0`.
+Necesitas tener `yt-dlp` y FFmpeg disponibles en ese equipo.
+
+### Publicación en Render
+
+El repositorio incluye `render.yaml`, `requirements-web.txt` y `apt.txt` para
+desplegar el backend completo en Render. Render instala FFmpeg y ejecuta Flask
+con Gunicorn. En el panel de Render selecciona **New > Blueprint** y conecta
+este repositorio.
+
+### Vercel
+
+Vercel no debe ejecutar el motor de descargas: sus funciones son temporales y
+no garantizan FFmpeg ni almacenamiento persistente. El despliegue correcto es
+Render para esta aplicación completa. Vercel puede alojar una futura interfaz
+estática que consuma la URL pública de Render, pero no sustituye al backend.
 Salida esperada:
 ```
 [1/4] Probando validación de URLs...  -> PASÓ [OK]

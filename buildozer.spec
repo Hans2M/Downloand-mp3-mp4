@@ -23,7 +23,10 @@ version = 1.0.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==2.3.0,kivymd==1.2.0,pillow,urllib3,requests,certifi,pyjnius,ffmpeg
+# Kivy 2.3.0 is not compatible with the CPython 3.14 headers selected by
+# recent python-for-android releases. Keep the guest Python on the supported
+# 3.13 line until a Kivy release with Python 3.14 support is available.
+requirements = python3==3.13.5,kivy==2.3.0,kivymd==1.2.0,pillow,urllib3,requests,certifi,pyjnius,ffmpeg
 
 # (str) Presplash of the application
 presplash.filename = %(source.dir)s/assets/presplash.png
