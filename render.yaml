@@ -7,3 +7,5 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.5
+      - key: MEDIA_DOWNLOADER_ADMIN_TOKEN
+        sync: false

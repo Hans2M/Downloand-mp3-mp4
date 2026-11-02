@@ -28,6 +28,22 @@
       <p id="message" class="message" role="status"></p>
     </section>
 
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Cookies de YouTube</h2>
+          <p class="muted">Necesarias si YouTube bloquea la IP de Render.</p>
+        </div>
+        <span id="cookie-status" class="task-meta">No configuradas</span>
+      </div>
+      <form id="cookies-form" class="url-row">
+        <input id="admin-token" type="password" placeholder="Token administrativo" required>
+        <input id="cookies-file" type="file" accept=".txt" required>
+        <button class="small-button" type="submit">Guardar cookies</button>
+      </form>
+      <p class="task-meta">Usa un archivo Netscape cookies.txt exportado de tu navegador. No lo compartas. El token se configura en Render.</p>
+    </section>
+
     <section id="media-panel" class="card hidden">
       <div class="media-heading">
         <img id="thumbnail" alt="" class="thumbnail hidden">

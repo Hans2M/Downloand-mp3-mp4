@@ -178,6 +178,14 @@ La web ejecuta las descargas en el equipo donde corre Flask; para usarla desde
 otro dispositivo de la misma red, inicia con `MEDIA_DOWNLOADER_HOST=0.0.0.0`.
 Necesitas tener `yt-dlp` y FFmpeg disponibles en ese equipo.
 
+Si YouTube bloquea la IP de Render, exporta desde tu navegador un archivo
+`cookies.txt` en formato Netscape y súbelo en la sección **Cookies de
+YouTube** de la web. Define primero la variable secreta
+`MEDIA_DOWNLOADER_ADMIN_TOKEN` en Render y usa ese mismo token en el formulario.
+El archivo se guarda en el almacenamiento local del servicio; no lo compartas
+ni lo subas al repositorio. En el plan gratuito de Render puede desaparecer al
+reiniciarse el servicio, por lo que tendrás que volver a cargarlo.
+
 ### Publicación en Render
 
 El repositorio incluye `render.yaml`, `requirements-web.txt` y `apt.txt` para

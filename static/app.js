@@ -17,6 +17,12 @@ async function api(url, options = {}) {
   return data;
 }
 
+async function refreshCookieStatus() {
+  const response = await fetch("/api/cookies");
+  const data = await response.json();
+  $("#cookie-status").textContent = data.configured ? "Configuradas" : "No configuradas";
+}
+
 function updateQualityOptions() {
   const options = state.media?.[state.format === "mp3" ? "audio_qualities" : "video_qualities"] || [];
   $("#quality").innerHTML = options.map((item) =>
@@ -92,6 +98,24 @@ $("#analyze-form").addEventListener("submit", async (event) => {
   }
 });
 
+$("#cookies-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const file = $("#cookies-file").files[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append("cookies", file);
+  formData.append("token", $("#admin-token").value);
+  try {
+    const response = await fetch("/api/cookies", { method: "POST", body: formData });
+    const data = await response.json();
+    if (!response.ok || data.success === false) throw new Error(data.error || "No se pudieron guardar las cookies.");
+    showMessage(data.message, "success");
+    refreshCookieStatus();
+  } catch (error) {
+    showMessage(error.message, "error");
+  }
+});
+
 document.querySelectorAll(".format-button").forEach((button) => {
   button.addEventListener("click", () => {
     state.format = button.dataset.format;
@@ -143,5 +167,6 @@ $("#refresh-button").addEventListener("click", refreshTasks);
 $("#history-button").addEventListener("click", refreshHistory);
 refreshTasks();
 refreshHistory();
+refreshCookieStatus();
 setInterval(refreshTasks, 1500);
 setInterval(refreshHistory, 5000);

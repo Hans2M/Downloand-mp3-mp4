@@ -5,6 +5,7 @@ el flujo de la aplicación Kivy/Android.
 """
 
 import os
+import secrets
 import sys
 from typing import Any, Dict
 
@@ -19,10 +20,14 @@ from storage.storage_manager import StorageManager
 
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
 db_manager = DatabaseManager()
 storage_manager = StorageManager()
 download_manager = DownloadManager(db_manager, storage_manager)
 extractor = MediaExtractor()
+base_dir = os.path.dirname(os.path.abspath(__file__))
+cookies_dir = os.path.join(base_dir, "data")
+cookies_path = os.path.join(cookies_dir, "cookies.txt")
 
 
 def error_response(message: str, status: int = 400):
@@ -32,6 +37,34 @@ def error_response(message: str, status: int = 400):
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/api/cookies")
+def cookies_status():
+    return jsonify({"configured": os.path.isfile(cookies_path) and os.path.getsize(cookies_path) > 10})
+
+
+@app.post("/api/cookies")
+def upload_cookies():
+    expected_token = os.environ.get("MEDIA_DOWNLOADER_ADMIN_TOKEN", "")
+    supplied_token = request.form.get("token", "")
+    if not expected_token or not secrets.compare_digest(supplied_token, expected_token):
+        return error_response("Configura un token administrativo válido para cargar cookies.", 403)
+
+    uploaded = request.files.get("cookies")
+    if not uploaded or not uploaded.filename:
+        return error_response("Selecciona un archivo cookies.txt.")
+
+    content = uploaded.read()
+    if len(content) > app.config["MAX_CONTENT_LENGTH"]:
+        return error_response("El archivo de cookies no puede superar 1 MB.")
+    if b"# Netscape HTTP Cookie File" not in content[:512]:
+        return error_response("El archivo debe estar en formato Netscape cookies.txt.")
+
+    os.makedirs(cookies_dir, exist_ok=True)
+    with open(cookies_path, "wb") as cookie_file:
+        cookie_file.write(content)
+    return jsonify({"success": True, "message": "Cookies configuradas para este servicio."})
 
 
 @app.post("/api/analyze")
